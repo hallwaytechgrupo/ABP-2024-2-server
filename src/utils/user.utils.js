@@ -1,5 +1,6 @@
 async function emailExistente(email) {
   // faça a validação do email
+  return false;
 }
 
-export { emailExistente };
+module.exports = { emailExistente };

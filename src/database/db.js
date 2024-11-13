@@ -6,18 +6,11 @@ console.log(process.env.DB_USER);
 const client = new Client({
   user: process.env.DB_USER,
   host: process.env.DB_HOST,
-  database: process.env.DB_NAME,
+  database: process.env.DB_DATABASE,
   password: process.env.DB_PASSWORD,
   port: process.env.DB_PORT,
+  ssl: { rejectUnauthorized: false }
 });
-
-// Conectar ao banco de dados
-client
-  .connect()
-  .then(() => console.log("Conectado ao banco de dados com sucesso!"))
-  .catch((err) =>
-    console.error("Erro de conexão ao banco de dados:", err.stack),
-  );
 
 // Exportando o cliente para usar em outros arquivos
 module.exports = client;

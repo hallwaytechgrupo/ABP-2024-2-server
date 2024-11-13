@@ -1,18 +1,23 @@
-const client = require("../database/db"); // Importa a conexão do banco de dados
+const client = require("../database/db");
+const { emailExistente } = require("../utils/user.utils");
 
 // Função para inserir um usuário
 async function cadastro(req, res) {
-  const { name, password, email } = req.body;
+  const { name, password, mail } = req.body;
+
+  if (emailExistente(mail)) {
+    return res.status(400).json({ message: "E-mail já cadastrado" });
+  }
 
   const query = {
-    text: "INSERT INTO users (name, password, mail) VALUES ($1, $2, $3) RETURNING id, name, mail",
-    values: [name, password, email],
+    text: "INSERT INTO usuario (name, password, mail) VALUES ($1, $2, $3) RETURNING id, name, mail",
+    values: [name, password, mail],
   };
 
   try {
     const result = await client.query(query); // Executa a query
     console.log(result.rows[0]);
-    res.send(201).json(result.rows[0]);
+    res.status(201).json(result.rows[0]);
   } catch (err) {
     res.json({ message: err.message });
   }

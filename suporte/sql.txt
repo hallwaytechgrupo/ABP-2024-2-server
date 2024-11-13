@@ -5,4 +5,3 @@ CREATE TABLE users (
     mail VARCHAR(255) NOT NULL,    -- E-mail do usuário (obrigatório)
     CONSTRAINT users_mail_unique UNIQUE (mail) -- Garantir que o e-mail seja único
 );
-    

@@ -1,0 +1,27 @@
+Table usuario {
+  email varchar [pk, not null] // Identificador único do usuário (email)
+  nome varchar [not null] // Nome do usuário
+  senha varchar [not null] // Senha do usuário
+}
+
+Table questao {
+  idquestao int [pk, increment, not null] // Identificador único da questão
+  modulo varchar [not null] // Nome do módulo ao qual a questão pertence
+  enunciado text [not null] // Texto da questão
+  alternativa boolean [not null] // Resposta correta da questão (true ou false)
+}
+
+Table tentativa {
+  idtentativa int [pk, increment, not null] // Identificador único da tentativa
+  modulo varchar [not null] // Nome do módulo ao qual a tentativa pertence
+  email varchar [ref: > usuario.email] // Identificador do usuário que fez a tentativa
+  datahorario timestamp [not null, default: `CURRENT_TIMESTAMP`] // Data e hora em que a tentativa foi feita
+  nota float // Nota final obtida pelo usuário na tentativa
+}
+
+Table resposta_usuario {
+  idresposta int [pk, increment, not null] // Identificador único da resposta
+  idtentativa int [ref: > tentativa.idtentativa] // Identificador da tentativa à qual a resposta pertence
+  idquestao int [ref: > questao.idquestao] // Identificador da questão à qual a resposta pertence
+  resposta boolean [not null] // Resposta fornecida pelo usuário
+}

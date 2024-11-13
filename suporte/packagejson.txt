@@ -1,0 +1,14 @@
+"devDependencies": {    // instala o nodemon através de npm i nodemon -D (é a parte do desenvolvedor que não vai para o cliente)         // derruba o servidor sempre que atualiza os arquivos raízes js
+    "nodemon": "^3.1.7"
+  }
+
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",   // biblioteca
+    "pg": "^8.13.1"         // biblioteca que conecta o front com o postgres
+  },
+
+
+--> npm run dev ou start  -> dev para testes
+
+--> extensão thunder client para teste de conexão

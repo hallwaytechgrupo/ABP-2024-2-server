@@ -1,0 +1,233 @@
+tenho uma pasta de um projeto chamada ABP-2024-2, dentro dela tem a pasta server, dentro dela tem uma pasta src, dentro dela está meu arquivo index.js:
+
+const express = require('express');
+require('dotenv').config();
+
+const path = require('path'); // ADICIONADO
+
+const user = require("./routes/user");
+
+const app = express();
+
+//ADICIONADO
+// Middleware para servir arquivos estáticos
+
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(express.json());
+
+const port = process.env.PORT || 3000;
+// || 3000 adicionado
+
+app.listen(port, () => {
+    console.log(`Rodando na porta ${port}...`);
+});
+
+app.use("/user", user);
+
+
+--------------------------------------------------------- 
+
+tenho uma pasta de um projeto chamada ABP-2024-2, dentro dela tem a pasta server, dentro dela tem uma pasta src, dentro dela tem uma pasta routes, dentro dela está meu arquivo user.js:
+
+
+const express = require('express');
+const router = express.Router();
+const { insertUser, loginUser } = require('../controllers/UserController');  // Importa o controlador
+
+// Rota para inserir um novo usuário
+router.post('/', insertUser);
+router.post("/login", loginUser);
+
+module.exports = router;
+
+----------------------------------------------------------
+tenho uma pasta de um projeto chamada ABP-2024-2, dentro dela tem a pasta server, dentro dela tem uma pasta src, dentro dela tem uma pasta controllers, dentro dela está meu arquivo db.js:
+
+const { Client } = require('pg');
+
+// Configuração da conexão
+const client = new Client({
+    user: 'postgres',        // Seu usuário do PostgreSQL
+    host: 'localhost',          // O endereço do servidor do banco de dados (use 'localhost' para desenvolvimento local)
+    database: 'testeaulanode',            // Nome do banco de dados
+    password: 'Ari824654el*',      // Senha do seu usuário PostgreSQL
+    port: 5432,                 // Porta padrão do PostgreSQL
+});
+
+// Conectar ao banco de dados
+client.connect()
+    .then(() => console.log('Conectado ao banco de dados com sucesso!'))
+    .catch((err) => console.error('Erro de conexão ao banco de dados:', err.stack));
+
+// Exportando o cliente para usar em outros arquivos
+module.exports = client;
+
+
+e o segundo arquivo dentro da pasta controllers é o seguinte: UserController.js
+
+const client = require('./db');  // Importa a conexão do banco de dados
+
+// Função para inserir um usuário
+async function insertUser(req, res) {
+    const {name, password, mail} = req.body;
+
+    const query = {
+        text: 'INSERT INTO users (name, password, mail) VALUES ($1, $2, $3) RETURNING id, name, mail',
+        values: [name, password, mail],
+    };
+
+    try {
+        const result = await client.query(query);  // Executa a query
+        res.json(result.rows[0]);
+    } catch (err) {
+        res.json({message: err.message});
+    }
+}
+
+// Função para validar o login
+async function loginUser(req, res) {
+    const { mail, password } = req.body;
+
+    // Recuperar o usuário do banco de dados pelo e-mail
+    const query = {
+        text: 'SELECT id, name, mail, password FROM users WHERE mail = $1 AND password = $2',
+        values: [mail, password],
+    };
+
+    try {
+        const result = await client.query(query);
+
+        // Se o usuário não existir, retornamos um erro
+        if (result.rows.length === 0) {
+            return res.status(400).json({ message: 'E-mail ou senha inválidos' });
+        }
+
+        const user = result.rows[0];
+        // Retornar o usuário 
+        res.json({
+            id: user.id,
+            name: user.name,
+            mail: user.mail
+        });
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+}
+
+module.exports = { insertUser, loginUser };
+
+---------------------------------------------------------
+tenho uma pasta de um projeto chamada ABP-2024-2, dentro dela tem a pasta server, dentro dela tem uma pasta src, dentro dela tem uma pasta public, dentro dela tem uma pasta js que está o arquivo puxar-dados.js:
+
+document.addEventListener("DOMContentLoaded", () => {
+    // Seleciona o formulário de cadastro e o de login
+    const cadastroForm = document.querySelector("#cadastro-tab-content form");
+    const loginForm = document.querySelector("#login-tab-content form");
+  
+    // Função para enviar dados do cadastro
+    cadastroForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+  
+      const formData = new FormData(cadastroForm);
+      const data = Object.fromEntries(formData.entries());
+  
+      try {
+        const response = await fetch("/user", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(data)
+        });
+  
+        const result = await response.json();
+        console.log("Usuário cadastrado:", result);
+      } catch (error) {
+        console.error("Erro ao cadastrar usuário:", error);
+      }
+    });
+  
+    // Função para enviar dados do login
+    loginForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+  
+      const formData = new FormData(loginForm);
+      const data = Object.fromEntries(formData.entries());
+  
+      try {
+        const response = await fetch("/user/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(data)
+        });
+  
+        const result = await response.json();
+        console.log("Usuário logado:", result);
+      } catch (error) {
+        console.error("Erro ao fazer login:", error);
+      }
+    });
+  });
+  
+
+------------------------------------------------
+tenho uma pasta de um projeto chamada ABP-2024-2, dentro dela tem a pasta components onde está meu arquivo login.html:
+
+
+<head>
+  <link rel="stylesheet" href="../css/reset.css" />
+  <link rel="stylesheet" href="../css/global.css" />
+  <link rel="stylesheet" href="../css/components.css" />
+  <link rel="stylesheet" href="../css/login.css" />
+</head>
+<body>
+  <div class="modal">
+    <div class="login">
+      <div class="login-topo">
+        <div class="topo-login">
+          <a href="#" class="login active" id="login-tab">LOGIN</a>
+        </div>
+        <div class="topo-cadastro">
+          <a href="#" class="cadastro" id="cadastro-tab">CADASTRO</a>
+        </div>
+      </div>
+      <div class="login-container" id="login-tab-content">
+        <h2 class="h2-login">Seja bem-vindo!</h2>
+        <form>
+          <!-- <label for="email">E-mail:</label> -->
+          <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="E-mail"
+            required
+          />
+          <!-- <label for="password">Senha:</label> -->
+          <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Senha"
+            required
+          />
+          <button type="submit">Entrar</button>
+        </form>
+      </div>
+      
+      <div class="cadastro-container" id="cadastro-tab-content">
+        <h2 class="h2-login">Entre com seus dados para se cadastrar.</h2>
+        <form>
+          <input type="text" placeholder="Nome e sobrenome" />
+          <input type="email" placeholder="E-mail" />
+          <input type="password" placeholder="Senha" />
+          <input type="password" placeholder="Repita sua senha" />
+          <button type="submit">Cadastrar</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</body>
+

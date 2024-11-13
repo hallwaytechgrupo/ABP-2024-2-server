@@ -1,11 +1,11 @@
-const client = require("../database/db");
+const pool = require("../database/db");
 const { emailExistente } = require("../utils/user.utils");
 
-// Função para inserir um usuário
 async function cadastro(req, res) {
   const { name, password, mail } = req.body;
 
-  if (emailExistente(mail)) {
+  // Verificar se o email já existe
+  if (await emailExistente(mail)) {
     return res.status(400).json({ message: "E-mail já cadastrado" });
   }
 
@@ -14,14 +14,19 @@ async function cadastro(req, res) {
     values: [name, password, mail],
   };
 
+  const client = await pool.connect();
   try {
     const result = await client.query(query); // Executa a query
     console.log(result.rows[0]);
     res.status(201).json(result.rows[0]);
   } catch (err) {
     res.json({ message: err.message });
+  } finally {
+    client.release();
   }
 }
+
+module.exports = { cadastro };
 
 // Função para validar o login
 async function login(req, res) {

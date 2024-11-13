@@ -1,14 +1,17 @@
-const { Client } = require("pg");
+const { Pool } = require("pg");
+require("dotenv").config();
 
-// Configuração da conexão
-const client = new Client({
+const pool = new Pool({
   user: process.env.DB_USER,
   host: process.env.DB_HOST,
   database: process.env.DB_DATABASE,
   password: process.env.DB_PASSWORD,
   port: process.env.DB_PORT,
-  ssl: { rejectUnauthorized: false }
+  ssl: { rejectUnauthorized: false },
+  max: 5,
+  min: 0,
+  acquire: 30000,
+  idle: 20000,
 });
 
-// Exportando o cliente para usar em outros arquivos
-module.exports = client;
+module.exports = pool;

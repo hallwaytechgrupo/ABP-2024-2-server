@@ -1,10 +1,11 @@
+const pool = require("./db");
 const client = require("./db");
 require("dotenv").config();
 
 async function setupDatabase() {
+  console.log("Conectando ao banco de dados...");
+  const client = await pool.connect();
   try {
-    console.log("Conectando ao banco de dados...");
-    await client.connect();
     console.log("✔ Banco de dados conectado!");
 
     console.log(" • Configurando banco de dados...");
@@ -47,7 +48,7 @@ async function setupDatabase() {
     console.error("✘ Erro ao configurar o banco de dados:", err.stack);
     throw err;
   } finally {
-    await client.end();
+    client.release();
   }
 }
 

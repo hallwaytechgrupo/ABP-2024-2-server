@@ -144,7 +144,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const result = await response.json();
         console.log("Usuário cadastrado:", result);
       } catch (error) {
-        console.error("Erro ao cadastrar usuário:", error);
+        console.error("Erro ao cadastro usuário:", error);
       }
     });
   
@@ -218,13 +218,13 @@ tenho uma pasta de um projeto chamada ABP-2024-2, dentro dela tem a pasta compon
       </div>
       
       <div class="cadastro-container" id="cadastro-tab-content">
-        <h2 class="h2-login">Entre com seus dados para se cadastrar.</h2>
+        <h2 class="h2-login">Entre com seus dados para se cadastro.</h2>
         <form>
           <input type="text" placeholder="Nome e sobrenome" />
           <input type="email" placeholder="E-mail" />
           <input type="password" placeholder="Senha" />
           <input type="password" placeholder="Repita sua senha" />
-          <button type="submit">Cadastrar</button>
+          <button type="submit">cadastro</button>
         </form>
       </div>
     </div>

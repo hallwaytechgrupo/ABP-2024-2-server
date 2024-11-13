@@ -1,9 +1,10 @@
-const express = require('express');
+const express = require("express");
+
 const router = express.Router();
-const { insertUser, loginUser } = require('../controllers/UserController');  // Importa o controlador
+const { cadastro, login } = require("../controllers/UserController"); // Importa o controlador
 
 // Rota para inserir um novo usuário
-router.post('/', insertUser);
-router.post("/login", loginUser);
+router.post("/", cadastro);
+router.post("/login", login);
 
 module.exports = router;

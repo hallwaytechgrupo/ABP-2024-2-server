@@ -1,10 +1,15 @@
-const express = require("express");
+const express = require('express');
+
 const router = express.Router();
 
-router.post("/", () => {});
-router.get("/:modulo/:id", (req, res) => {
-  const { modulo, id } = req.params;
-  res.send(`Modulo: ${modulo}, ID: ${id}`);
-});
+const { getQuestoes, createQuestao, getTentativasByEmail, createTentativa, getQuestaoById, getQuestoesByModulo } = require("../controllers/quiz.controller"); // Importa o controlador
+
+// Definir as rotas
+router.get('/questoes', getQuestoes);
+router.get('/questoes/modulo/:modulo', getQuestoesByModulo);
+router.get('/questoes/:id', getQuestaoById);
+router.get('/tentativas/:email', getTentativasByEmail);
+router.post('/questoes', createQuestao);
+router.post('/tentativas', createTentativa);
 
 module.exports = router;

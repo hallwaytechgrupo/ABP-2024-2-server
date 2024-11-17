@@ -1,0 +1,26 @@
+Table usuario {
+  id SERIAL [pk, not null, note: "Chave primária com auto incremento"]
+  nome varchar [not null, note: "Nome do usuário (obrigatório)"]
+  senha varchar [not null, note: "Senha do usuário (obrigatório)"]
+  email varchar [not null, unique, note: "E-mail do usuário (obrigatório)"]
+}
+
+Table questao {
+  idquestao smallserial [pk, increment, not null, note: "Identificador único da questão"]
+  modulo smallint [not null, note: "Nome do módulo ao qual a questão pertence"]
+  enunciado text [not null, note: "Texto da questão"]
+  alternativa boolean [not null, note: "Resposta correta da questão (true ou false)"]
+}
+
+Table tentativa {
+  idtentativa smallserial [pk, increment, not null, note: "Identificador único da tentativa"]
+  userid smallint [ref: > usuario.id, note: "Identificador do usuário que fez a tentativa"]
+  modulo smallint [not null, note: "Nome do módulo ao qual a tentativa pertence"]
+  idquestao1 smallint [ref: > questao.idquestao, note: "Identificador da primeira questão"]
+  idquestao2 smallint [ref: > questao.idquestao, note: "Identificador da segunda questão"]
+  idquestao3 smallint [ref: > questao.idquestao, note: "Identificador da terceira questão"]
+  resposta1 boolean [not null, note: "Resposta fornecida pelo usuário para a primeira questão"]
+  resposta2 boolean [not null, note: "Resposta fornecida pelo usuário para a segunda questão"]
+  resposta3 boolean [not null, note: "Resposta fornecida pelo usuário para a terceira questão"]
+  nota float [note: "Nota final obtida pelo usuário na tentativa"]
+}

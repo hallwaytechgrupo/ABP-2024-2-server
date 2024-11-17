@@ -1,5 +1,4 @@
 const express = require("express");
-
 const router = express.Router();
 const { cadastro, login } = require("../controllers/user.controller"); // Importa o controlador
 

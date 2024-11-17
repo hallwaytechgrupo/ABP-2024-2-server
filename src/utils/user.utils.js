@@ -5,7 +5,7 @@ const emailExistente = async (email) => {
   try {
     console.log("Verificando se o e-mail existe...");
     if (email != null) {
-      const consulta = "SELECT COUNT(*) FROM usuario WHERE mail = $1";
+      const consulta = "SELECT COUNT(*) FROM usuario WHERE email = $1";
       const resultado = await client.query(consulta, [email]);
       if (Number(resultado.rows[0].count) === 1) {
         return true;

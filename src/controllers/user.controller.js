@@ -2,16 +2,28 @@ const pool = require("../database/db");
 const { emailExistente } = require("../utils/user.utils");
 
 async function cadastro(req, res) {
-  const { name, password, mail } = req.body;
+  /*
+    #swagger.tags = ['Usuario']
+    #swagger.summary = 'Cadastrar novo usuário'
+    #swagger.description = 'Endpoint para cadastrar um novo usuário, ao cadastrar, é retornado {id, nome, email}'
+  */
+  const { nome, senha, email } = req.body;
+
+  // Verificar se os campos foram preenchidos
+  if (!nome || !senha || !email) {
+    return res.status(400).json({ message: "Todos os campos são obrigatórios" });
+  }
+
+  console.log(nome, senha, email);
 
   // Verificar se o email já existe
-  if (await emailExistente(mail)) {
+  if (await emailExistente(email)) {
     return res.status(400).json({ message: "E-mail já cadastrado!" });
   }
 
   const query = {
-    text: "INSERT INTO usuario (name, password, mail) VALUES ($1, $2, $3) RETURNING id, name, mail",
-    values: [name, password, mail],
+    text: "INSERT INTO usuario (nome, senha, email) VALUES ($1, $2, $3) RETURNING id, nome, email",
+    values: [nome, senha, email],
   };
 
   const client = await pool.connect();
@@ -30,13 +42,22 @@ module.exports = { cadastro };
 
 // Função para validar o login
 async function login(req, res) {
-  console.log("Login");
-  const { mail, password } = req.body;
+  /*
+    #swagger.tags = ['Usuario']
+    #swagger.summary = 'Login de usuário'
+    #swagger.description = 'Endpoint para realizar o login de um usuário, ao logar, é retornado {id, nome, email}'
+  */
+  const { email, senha } = req.body;
+
+  // Verificar se os campos foram preenchidos
+  if (!email || !senha) {
+    return res.status(400).json({ message: "Todos os campos são obrigatórios" });
+  }
 
   // Recuperar o usuário do banco de dados pelo e-mail
   const query = {
-    text: "SELECT id, name, mail, password FROM usuario WHERE mail = $1 AND password = $2",
-    values: [mail, password],
+    text: "SELECT id, nome, email, senha FROM usuario WHERE email = $1 AND senha = $2",
+    values: [email, senha],
   };
 
   const client = await pool.connect();
@@ -52,8 +73,8 @@ async function login(req, res) {
     // Retornar o usuário
     res.json({
       id: user.id,
-      name: user.name,
-      mail: user.mail,
+      nome: user.nome,
+      email: user.email,
     });
   } catch (err) {
     res.status(500).json({ message: err.message });

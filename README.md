@@ -1,11 +1,14 @@
+![HallwayTech](https://camo.githubusercontent.com/d6d960662f61d84b6ffb609d9d67b97fb174e442c044ce3d78dae5f2e603ef1b/68747470733a2f2f692e696d6775722e636f6d2f5a7658644f507a2e706e67)
+
 # Quiz API
 - API para gerenciamento de quizzes, incluindo cadastro de usuários, login, obtenção de questões e criação de tentativas de quiz.
 
-[![Documentação do Banco de Dados](https://img.shields.io/static/v1?style=for-the-badge&label=&color=black&logo=database&message=Documentacao%20BD)](https://dbdocs.io/Hallwaytech%20Grupo/scrum-server?view=table_structure)
+[![Documentação do Banco de Dados](https://img.shields.io/static/v1?style=for-the-badge&label=&color=black&logo=googledocs&message=Documentacao%20BD)](https://dbdocs.io/Hallwaytech%20Grupo/scrum-server?view=table_structure)
+[![Documentação do Banco de Dados](https://img.shields.io/static/v1?style=for-the-badge&label=&color=black&logo=swagger&message=API%20Docs)](https://abp-2024-2-server.onrender.com/api-docs/)
 
 ## Modelo de Banco de Dados
 
-![Modelo de Banco de Dados](./suporte/database.png)
+![Modelo de Banco de Dados](./docs/database.png)
 
 ### Explicação do Banco de Dados
 

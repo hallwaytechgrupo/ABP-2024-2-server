@@ -1,0 +1,238 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "HallwayTech Scrum API",
+    "description": "API para cadastrar usuários, realizar login, obter questões e criar tentativas de quiz"
+  },
+  "servers": [
+    {
+      "url": "https://abp-2024-2-server.onrender.com"
+    }
+  ],
+  "paths": {
+    "/user/signup": {
+      "post": {
+        "tags": [
+          "Usuario"
+        ],
+        "summary": "Cadastrar novo usuário",
+        "description": "Endpoint para cadastrar um novo usuário, ao cadastrar, é retornado {id, nome, email}",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "nome": {
+                    "example": "any"
+                  },
+                  "senha": {
+                    "example": "any"
+                  },
+                  "email": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/login": {
+      "post": {
+        "tags": [
+          "Usuario"
+        ],
+        "summary": "Login de usuário",
+        "description": "Endpoint para realizar o login de um usuário, ao logar, é retornado {id, nome, email}",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "example": "any"
+                  },
+                  "senha": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/quiz/": {
+      "get": {
+        "tags": [
+          "Quiz"
+        ],
+        "summary": "Obter TODAS as questões",
+        "description": "Endpoint para obter todas as questões cadastradas no banco de dados.",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/quiz/modulo/{modulo}": {
+      "get": {
+        "tags": [
+          "Quiz"
+        ],
+        "summary": "Obter questões por módulo",
+        "description": "Endpoint para obter todas as questões de um módulo específico.",
+        "parameters": [
+          {
+            "name": "modulo",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/quiz/verificarAprovacao/{email}/{modulo}": {
+      "get": {
+        "tags": [
+          "Quiz"
+        ],
+        "summary": "Verificar aprovação",
+        "description": "Endpoint para verificar se um usuário foi aprovado em um módulo específico.",
+        "parameters": [
+          {
+            "name": "email",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "modulo",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/quiz/tentativas": {
+      "post": {
+        "tags": [
+          "Quiz"
+        ],
+        "summary": "Criar tentativa",
+        "description": "Endpoint para criar uma nova tentativa e calcular a nota.",
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "modulo": {
+                    "example": "any"
+                  },
+                  "email": {
+                    "example": "any"
+                  },
+                  "respostas": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Quiz"
+        ],
+        "summary": "Obter tentativas por usuário",
+        "description": "Endpoint para obter todas as tentativas de um usuário.",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    }
+  }
+}

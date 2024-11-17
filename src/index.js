@@ -8,13 +8,20 @@ const quiz = require("./routes/quiz");
 const cors = require("cors");
 const { setupDatabase } = require("./database/setup.db");
 
+const swaggerUi = require("swagger-ui-express");
+const swaggerFile = require("./swagger-output.json");
+const morgan = require("morgan");
+
 const app = express();
 app.use(cors());
 app.use(express.json());
+// app.use(bodyParser.json());
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
-//ADICIONADO
 // Middleware para servir arquivos estáticos
 app.use(express.static(path.join(__dirname, "public")));
+
+app.use(morgan("dev"));
 
 setupDatabase()
   .then(() => {

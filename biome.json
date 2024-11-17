@@ -8,7 +8,7 @@
 		"rules": {
 			"recommended": true
 		}
-	}, 
+	},
 	"javascript": {
 		"formatter": {
 			"indentStyle": "space",

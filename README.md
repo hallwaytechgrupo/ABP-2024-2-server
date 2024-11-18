@@ -4,7 +4,8 @@
 - API para gerenciamento de quizzes, incluindo cadastro de usuários, login, obtenção de questões e criação de tentativas de quiz.
 
 [![Documentação do Banco de Dados](https://img.shields.io/static/v1?style=for-the-badge&label=&color=black&logo=googledocs&message=Documentacao%20BD)](https://dbdocs.io/Hallwaytech%20Grupo/scrum-server?view=table_structure)
-[![Documentação do Banco de Dados](https://img.shields.io/static/v1?style=for-the-badge&label=&color=black&logo=swagger&message=API%20Docs)](https://abp-2024-2-server.onrender.com/api-docs/)
+[![Documentação da API](https://img.shields.io/static/v1?style=for-the-badge&label=&color=black&logo=swagger&message=API%20Docs)](https://abp-2024-2-server.onrender.com/api-docs/)
+[![Documentação da API](https://img.shields.io/static/v1?style=for-the-badge&label=&color=black&logo=openapiinitiative&message=Rest%20API%20Docs)](https://bump.sh/hallwaytech/doc/hallwayeducation)
 
 ## Modelo de Banco de Dados
 

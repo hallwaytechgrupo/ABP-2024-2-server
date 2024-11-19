@@ -11,7 +11,7 @@ const {
 // Definir as rotas
 router.get("/", getQuestoes);
 router.get("/modulo/:modulo", getQuestoesByModulo);
-router.get("/verificarAprovacao/:email/:modulo", verificarAprovacao);
+router.get("/verificarAprovacao/", verificarAprovacao);
 router.post("/tentativas", createTentativa);
 router.get("/tentativas", getTentativasByUser);
 

@@ -138,7 +138,7 @@ const verificarAprovacao = async (req, res) => {
     #swagger.summary = 'Verificar aprovação'
     #swagger.description = 'Endpoint para verificar se um usuário foi aprovado em um módulo específico.'
   */
-  const { email, modulo } = req.params;
+  const { email, modulo } = req.body;
 
   // Verificar se os campos foram preenchidos
   if (!email || !modulo) {

@@ -18,7 +18,7 @@ async function cadastro(req, res) {
 
   // Verificar se o email já existe
   if (await emailExistente(email)) {
-    return res.status(400).json({ message: "E-mail já cadastrado!" });
+    return res.status(409).json({ message: "E-mail já cadastrado!" });
   }
 
   const query = {

@@ -73,57 +73,46 @@ const createTentativa = async (req, res) => {
 
     const userId = userResult.rows[0].id;
 
-    // Obter as questões do módulo
-    const questoesResult = await client.query(
-      "SELECT idquestao, alternativa FROM questao WHERE modulo = $1",
-      [modulo],
-    );
+    // Buscar as questões do módulo no banco de dados
+    const questoesQuery = {
+      text: "SELECT idquestao, alternativa FROM questao WHERE idquestao = ANY($1::int[])",
+      values: [respostas.map(r => r.idquestao)],
+    };
 
-    // Verificar se o número de questões corresponde ao número de respostas
-    if (questoesResult.rows.length !== respostas.length) {
-      return res
-        .status(400)
-        .json({
-          error: "Número de respostas não corresponde ao número de questões",
-        });
+    const questoesResult = await client.query(questoesQuery);
+    const questoes = questoesResult.rows;
+
+    // Calcular a nota com base nas respostas
+    let nota = 0;
+    for (const resposta of respostas) {
+      const questao = questoes.find(q => q.idquestao === resposta.idquestao);
+      if (questao && questao.alternativa === resposta.resposta) {
+        nota += 1;
+      }
     }
 
-    // Calcular a nota
-    let acertos = 0;
-    const respostasMap = {};
-    respostas.forEach((resposta, index) => {
-      respostasMap[`idquestao${index + 1}`] = resposta.idquestao;
-      respostasMap[`resposta${index + 1}`] = resposta.resposta;
-      const questao = questoesResult.rows.find(
-        (q) => q.idquestao === resposta.idquestao,
-      );
-      if (questao && resposta.resposta === questao.alternativa) {
-        acertos++;
-      }
-    });
-
-    const nota = acertos;
-
-    // Criar a tentativa com as respostas e a nota
-    const tentativaResult = await client.query(
-      `INSERT INTO tentativa (userid, modulo, idquestao1, resposta1, idquestao2, resposta2, idquestao3, resposta3, nota)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING idtentativa`,
-      [
+    // Inserir a tentativa no banco de dados
+    const tentativaQuery = {
+      text: `
+        INSERT INTO tentativa (userid, modulo, idquestao1, resposta1, idquestao2, resposta2, idquestao3, resposta3, nota)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+        RETURNING idtentativa
+      `,
+      values: [
         userId,
         modulo,
-        respostasMap.idquestao1,
-        respostasMap.resposta1,
-        respostasMap.idquestao2,
-        respostasMap.resposta2,
-        respostasMap.idquestao3,
-        respostasMap.resposta3,
+        respostas[0].idquestao,
+        respostas[0].resposta,
+        respostas[1].idquestao,
+        respostas[1].resposta,
+        respostas[2].idquestao,
+        respostas[2].resposta,
         nota,
       ],
-    );
+    };
 
-    res
-      .status(201)
-      .json({ idtentativa: tentativaResult.rows[0].idtentativa, nota });
+    const tentativaResult = await client.query(tentativaQuery);
+    res.status(201).json({ idtentativa: tentativaResult.rows[0].idtentativa });
   } catch (err) {
     console.error("Erro ao criar tentativa:", err);
     res.status(500).json({ error: "Erro ao criar tentativa" });

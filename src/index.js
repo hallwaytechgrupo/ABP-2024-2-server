@@ -27,12 +27,13 @@ setupDatabase()
   .then(() => {
     const port = process.env.APP_PORT || 3000;
 
-    app.listen(port, () => {
-      console.log(`Rodando na porta ${port}...`);
-    });
-
     app.use("/user", user);
     app.use("/quiz", quiz);
+
+    app.listen(port, () => {
+      console.log(`Rodando na porta ${port}...`);
+      console.log('A rotas disponíveis são: /user/signup, /user/login, /quiz/questao, /quiz/tentativa');
+    });
   })
   .catch((err) => {
     console.error(

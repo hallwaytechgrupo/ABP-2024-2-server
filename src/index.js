@@ -27,10 +27,6 @@ setupDatabase()
   .then(() => {
     const port = process.env.APP_PORT || 3000;
 
-    app.use("/", (req, res) => {
-      res.send("API do Quiz");
-    });
-
     app.use("/health", (req, res) => {
       res.send("API está funcionando!");
     });

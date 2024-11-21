@@ -112,7 +112,7 @@ const createTentativa = async (req, res) => {
     };
 
     const tentativaResult = await client.query(tentativaQuery);
-    res.status(201).json({ idtentativa: tentativaResult.rows[0].idtentativa, nota: nota });
+    res.status(201).json({ idtentativa: tentativaResult.rows[0].idtentativa, nota: nota, aprovado: nota >= 2 });
   } catch (err) {
     console.error("Erro ao criar tentativa:", err);
     res.status(500).json({ error: "Erro ao criar tentativa" });

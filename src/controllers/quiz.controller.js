@@ -152,7 +152,7 @@ const verificarAprovacaoModulo = async (req, res) => {
       [email],
     );
 
-    console.log(userResult.rows);
+    console.log("Usuário:", userResult.rows);
 
     if (userResult.rows.length === 0) {
       return res.status(404).json({ error: "Usuário não encontrado" });
@@ -200,6 +200,7 @@ const verificarAprovacao = async (req, res) => {
   */
   const { email } = req.body;
 
+  console.log("Verificando aprovação para o email:", email);
   // Verificar se o campo email foi preenchido
   if (!email) {
     return res.status(400).json({ error: "O campo email é obrigatório" });
@@ -259,7 +260,7 @@ const getTentativasByUser = async (req, res) => {
       `SELECT t.* 
        FROM tentativa t
        JOIN usuario u ON t.userid = u.id
-       WHERE u.mail = $1`,
+       WHERE u.email = $1`,
       [email],
     );
     console.log(email);

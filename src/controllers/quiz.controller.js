@@ -121,7 +121,7 @@ const createTentativa = async (req, res) => {
   }
 };
 
-const verificarAprovacao = async (req, res) => {
+const verificarAprovacaoModulo = async (req, res) => {
   /*
     #swagger.tags = ['Quiz']
     #swagger.summary = 'Verificar aprovação'
@@ -138,7 +138,7 @@ const verificarAprovacao = async (req, res) => {
   try {
     // Obter o ID do usuário com base no email
     const userResult = await client.query(
-      "SELECT id FROM users WHERE email = $1",
+      "SELECT id FROM usuario WHERE email = $1",
       [email],
     );
 
@@ -160,7 +160,8 @@ const verificarAprovacao = async (req, res) => {
       return res
         .status(404)
         .json({
-          error: "Nenhuma tentativa encontrada para este módulo e usuário",
+          aprovado: false,
+          message: "Nenhuma tentativa encontrada para este módulo e usuário",
         });
     }
 
@@ -182,6 +183,54 @@ const verificarAprovacao = async (req, res) => {
     client.release();
   }
 };
+
+const verificarAprovacao = async (req, res) => {
+  /*
+    #swagger.tags = ['Quiz']
+    #swagger.summary = 'Verificar progresso'
+    #swagger.description = 'Endpoint para verificar o progresso de um usuário em todos os módulos.'
+  */
+    const { email } = req.body;
+
+    // Verificar se o campo email foi preenchido
+    if (!email) {
+      return res.status(400).json({ error: "O campo email é obrigatório" });
+    }
+  
+    const client = await pool.connect();
+    try {
+      // Obter o ID do usuário com base no email
+      const userResult = await client.query(
+        "SELECT id FROM usuario WHERE email = $1",
+        [email]
+      );
+  
+      if (userResult.rows.length === 0) {
+        return res.status(404).json({ error: "Usuário não encontrado" });
+      }
+  
+      const userId = userResult.rows[0].id;
+  
+      // Verificar aprovação em cada módulo
+      const modulos = [1, 2, 3];
+      const progresso = {};
+  
+      for (const modulo of modulos) {
+        const result = await client.query(
+          "SELECT COUNT(*) AS aprovado FROM tentativa WHERE userid = $1 AND modulo = $2 AND nota >= 2",
+          [userId, modulo]
+        );
+  
+        progresso[`modulo-${modulo}`] = result.rows[0].aprovado > 0;
+      }
+  
+      res.status(200).json(progresso);
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    } finally {
+      client.release();
+    }
+}
 
 const getTentativasByUser = async (req, res) => {
   /*
@@ -211,7 +260,7 @@ const getTentativasByUser = async (req, res) => {
     if (result.rows.length === 0) {
       return res
         .status(404)
-        .json({ error: "Nenhuma tentativa encontrada para este usuário" });
+        .json({ aprovado: false, error: "Nenhuma tentativa encontrada para este usuário" });
     }
 
     res.status(200).json(result.rows);
@@ -228,5 +277,6 @@ module.exports = {
   getQuestoesByModulo,
   createTentativa,
   verificarAprovacao,
+  verificarAprovacaoModulo,
   getTentativasByUser,
 };
